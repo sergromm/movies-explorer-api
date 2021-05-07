@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
+const { errors } = require('celebrate');
 const router = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -19,11 +20,22 @@ mongoose.connect('mongodb://localhost:27017/moviesexplorerdb', {
   useUnifiedTopology: true,
 });
 
-app.use(cors());
+const options = {
+  origin: ['http://localhost:3000'],
+  methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization', 'authorization'],
+  credentials: true,
+};
+
+app.use(cors(options));
 
 app.use(helmet());
 
 app.use('/', router);
+
+app.use(errors());
 
 app.use(errorHandler);
 

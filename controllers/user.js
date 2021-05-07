@@ -54,9 +54,12 @@ const getUserProfile = (req, res, next) => {
 };
 
 const editProfile = (req, res, next) => {
-  const { name, about } = req.body;
+  const { email, name } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { email, name }, {
+    new: true,
+    runValidators: true,
+  })
     .orFail(() => new NotFoundError('Пользователь не найден'))
     .then((user) => res.send(user))
     .catch((err) => handleErrors(err, next));
