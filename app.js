@@ -4,37 +4,36 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
 const { errors } = require('celebrate');
+
 const router = require('./routes/index');
+const limiter = require('./middlewares/limiter');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { corsOptions, dbpath } = require('./utils/confing');
 
-const { PORT = 3000 } = process.env;
+const {
+  PORT = 3000,
+  DB_PATH = dbpath,
+} = process.env;
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/moviesexplorerdb', {
+mongoose.connect(`${DB_PATH}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
 
-const options = {
-  origin: ['http://localhost:3000'],
-  methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization', 'authorization'],
-  credentials: true,
-};
-
-app.use(cors(options));
+app.use(cors(corsOptions));
 
 app.use(helmet());
 
 app.use(requestLogger);
+
+app.use(limiter);
 
 app.use('/', router);
 

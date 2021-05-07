@@ -3,6 +3,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const CastError = require('../errors/CastError');
 const ValidationError = require('../errors/ValidationError');
+const { movieNotFound, forbiddenToDelete } = require('../utils/error-messages');
 
 const handleErrors = (err, next) => {
   if (err.name === 'ValidationError') {
@@ -48,10 +49,10 @@ const saveMovie = (req, res, next) => {
 const deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
   Movie.findById(movieId)
-    .orFail(() => new NotFoundError('Фильм не найден'))
+    .orFail(() => new NotFoundError(movieNotFound))
     .then((movie) => {
       if (!movie.owner.equals(req.user._id)) {
-        throw new ForbiddenError('Нельзя удалить фильм из чужого списка');
+        throw new ForbiddenError(forbiddenToDelete);
       } else {
         res.send(movie);
         return movie.remove();

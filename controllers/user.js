@@ -6,10 +6,12 @@ const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const CastError = require('../errors/CastError');
+const { jwtDevSecret } = require('../utils/confing');
+const { userNotFound, emailTaken } = require('../utils/error-messages');
 
 const handleErrors = (err, next) => {
   if (err.name === 'MongoError' && err.code === 11000) {
-    return next(new ConflictError('Пользователь с такой почтой уже существует'));
+    return next(new ConflictError(emailTaken));
   }
   if (err.name === 'ValidationError') {
     return next(new ValidationError(err));
@@ -28,7 +30,7 @@ const login = (req, res, next) => {
       const { NODE_ENV, JWT_SECRET } = process.env;
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'mesto-secret-key',
+        NODE_ENV === 'production' ? JWT_SECRET : jwtDevSecret,
         { expiresIn: '7d' },
       );
 
@@ -48,7 +50,7 @@ const register = (req, res, next) => {
 
 const getUserProfile = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(() => new NotFoundError('Пользователь не найден'))
+    .orFail(() => new NotFoundError(userNotFound))
     .then((user) => res.send(user))
     .catch((err) => handleErrors(err, next));
 };
@@ -60,7 +62,7 @@ const editProfile = (req, res, next) => {
     new: true,
     runValidators: true,
   })
-    .orFail(() => new NotFoundError('Пользователь не найден'))
+    .orFail(() => new NotFoundError(userNotFound))
     .then((user) => res.send(user))
     .catch((err) => handleErrors(err, next));
 };
