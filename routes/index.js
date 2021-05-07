@@ -6,7 +6,7 @@ const auth = require('../middlewares/auth');
 const NotFoundError = require('../errors/NotFoundError');
 
 router.post('/signup', register);
-router.post('/signin', auth, login);
+router.post('/signin', login);
 
 router.use(auth);
 router.use('/movie', movieRouter);

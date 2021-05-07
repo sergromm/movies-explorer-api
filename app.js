@@ -1,6 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
+const cors = require('cors');
+const router = require('./routes/index');
+const errorHandler = require('./middlewares/errorHandler');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -15,6 +19,12 @@ mongoose.connect('mongodb://localhost:27017/moviesexplorerdb', {
   useUnifiedTopology: true,
 });
 
-app.listen(PORT, () => {
-  console.log(`Servers is up on ${PORT}`);
-});
+app.use(cors());
+
+app.use(helmet());
+
+app.use('/', router);
+
+app.use(errorHandler);
+
+app.listen(PORT);
