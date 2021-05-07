@@ -37,7 +37,7 @@ const login = (req, res, next) => {
     .catch((err) => next(new NotAuthorizedError(err.message)));
 };
 
-const createUser = (req, res, next) => {
+const register = (req, res, next) => {
   const { email, password, name } = req.body;
 
   bcrypt.hash(password, 10)
@@ -64,7 +64,7 @@ const editProfile = (req, res, next) => {
 
 module.exports = {
   login,
-  createUser,
+  register,
   getUserProfile,
   editProfile,
 };
