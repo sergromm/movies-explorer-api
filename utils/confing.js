@@ -1,5 +1,9 @@
 const corsOptions = {
-  origin: ['http://localhost:3000'],
+  origin: [
+    'http://localhost:3000',
+    'http://movies.nomoredomains.club',
+    'https://movies.nomoredomains.club',
+  ],
   methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
   optionsSuccessStatus: 204,
