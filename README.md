@@ -18,4 +18,4 @@ Backend дипломной работы для Яндекс.Практикум
 ## Ссылки
 
 Публичный IP: 84.252.143.199  
-Публичный домен: http://api-v1.movies.nomoredomains.club  
+Публичный домен: https://api-v1.movies.nomoredomains.club  
