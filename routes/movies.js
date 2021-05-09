@@ -5,6 +5,7 @@ const {
   saveMovie,
   deleteMovie,
 } = require('../controllers/movie');
+const { isURL } = require('../utils/helpers');
 
 movieRouter.get('/', getSavedMovies);
 
@@ -15,9 +16,9 @@ movieRouter.post('/', celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().uri().required(),
-    trailer: Joi.string().uri().required(),
-    thumbnail: Joi.string().uri().required(),
+    image: Joi.string().required().pattern(isURL),
+    trailer: Joi.string().required().pattern(isURL),
+    thumbnail: Joi.string().required().pattern(isURL),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),

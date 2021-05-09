@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(`${DB_PATH}`, {
+mongoose.connect(DB_PATH, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,

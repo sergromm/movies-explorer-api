@@ -1,25 +1,32 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
-const { wrongCredentials } = require('../utils/error-messages');
+const {
+  wrongCredentials,
+  emailIsRequired,
+  notValidEmail,
+  passwordIsRequired,
+  nameIsTooShort,
+  nameIsTooLong,
+} = require('../utils/error-messages');
 
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
     lowercase: true,
     unique: true,
-    required: [true, 'Email обязателен для заполнения'],
-    validate: [isEmail, 'Введите валидный email'],
+    required: [true, emailIsRequired],
+    validate: [isEmail, notValidEmail],
   },
   password: {
     type: String,
-    require: [true, 'Пароль обязателен для заполнения'],
+    require: [true, passwordIsRequired],
     select: false,
   },
   name: {
     type: String,
-    minlength: [2, 'Имя не может быть короче 2 символов'],
-    maxlength: [30, 'Имя не может быть длиннее 30 символов'],
+    minlength: [2, nameIsTooShort],
+    maxlength: [30, nameIsTooLong],
     default: 'User',
   },
 });

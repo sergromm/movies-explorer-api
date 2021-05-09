@@ -1,7 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 const router = require('express').Router();
-const movieRouter = require('./movie');
-const userRouter = require('./user');
+const movieRouter = require('./movies');
+const userRouter = require('./users');
 const { login, register } = require('../controllers/user');
 const auth = require('../middlewares/auth');
 const NotFoundError = require('../errors/NotFoundError');
@@ -22,15 +22,11 @@ router.post('/signin', celebrate({
   }),
 }), login);
 
-router.use(celebrate({
-  headers: Joi.object().keys({
-    authorization: Joi.string().required(),
-  }).unknown(true),
-}), auth);
+router.use(auth);
 
 router.use('/movies', movieRouter);
 
-router.use('/user', userRouter);
+router.use('/users', userRouter);
 
 router.use((req, res, next) => next(new NotFoundError(pageNotFound)));
 
